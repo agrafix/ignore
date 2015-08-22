@@ -1,0 +1,43 @@
+language: haskell
+env:
+- GHCVER=7.8.4
+- GHCVER=7.10.2
+- GHCVER=head
+matrix:
+  allow_failures:
+  - env: GHCVER=head
+before_install:
+- |
+  if [ $GHCVER = `ghc --numeric-version` ]; then
+    travis/cabal-apt-install --enable-tests $MODE
+    export CABAL=cabal
+  else
+    travis_retry sudo add-apt-repository -y ppa:hvr/ghc
+    travis_retry sudo apt-get update
+    travis_retry sudo apt-get install cabal-install-1.22 ghc-$GHCVER happy
+    export CABAL=cabal-1.22
+    export PATH=/opt/ghc/$GHCVER/bin:$PATH
+  fi
+- $CABAL update
+- |
+  if [ $GHCVER = "head" ] || [ $GHCVER = "7.8.4" ] || [ $GHCVER = "7.10.2" ]; then
+    $CABAL install happy alex
+    export PATH=$HOME/.cabal/bin:$PATH
+  fi
+install:
+- $CABAL install --dependencies-only --enable-tests
+- $CABAL configure -flib-Werror --enable-tests $MODE
+script:
+- ghc --numeric-version
+- $CABAL check
+- $CABAL build
+- $CABAL test --show-details=always
+deploy:
+  provider: hackage
+  username: AlexanderThiemann
+  skip_cleanup: true
+  on:
+    condition: $GHCVER = 7.8.4
+    tags: true
+  password:
+    secure: ORqdWUvaLW1rz7C7ske5lERAOddVMZJ1ps2LXHkyM5frARpdNL9D2inX9ZsFz++TTaeO0/Y0NjjwRrM9R7ASpkgi6eS/tzOtSt394CekKpp25dCfPpoPxo/WZdX6ymON/86P+2j29r6IWYEpRVIrLyxwZjOQsHTKvW3XOwk8PVoZZsmeJEiOcWExKTPKVWBfrIimzEWon8nVdHetKqrtOOakYhE59n/ePC2gQeuth4g7WK3+XnpTmOScJ1Mn50P9DlXLM1SOSgG6/fWLg07gm9huNBDxXDbLboRp43BX1/dXtG1mvKDfykYWS8KX/cyKct1UQGxno8OGxNlFTyvi3pGqF9YIrRZF2/p3qxkF3CoYU5LYZyjxSLn9C69Zbo4zRkrKbi0VSlj4KL+oGgq0IJCTzFQwgAYK9Ltdz6SrVpZRWYztZ5Zj9VE7NrTrsy15Ey5ruGVytHNXwuYMElpMZPolJv89i7F/oiztlrgLkZ4z9ah6iu+sGEY+3l0iG3qZFxZregZGeIgQeyDtagun2ZTcIfZcUYMOkqrMkHPsVTJa/Il6QGr2ktzbi4vK3f3K4NaBQaY7XPidnPkj5ZtDTsVq+Xkq4WyGLxLEFM+aYVJnNjWnMDHB72wAIzCVJwk0CP+X9/K6L6C9o5/2VgZjDlH9DJDQL8TliU1Jsdn8xQc=

@@ -1,0 +1,13 @@
+dist
+cabal-dev
+*.o
+*.hi
+*.chi
+*.chs.h
+.virthualenv
+.DS_Store
+.cabal-sandbox
+cabal.sandbox.config
+*~
+.stack-work
+.HTF
