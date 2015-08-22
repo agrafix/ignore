@@ -1,5 +1,10 @@
+{-# LANGUAGE CPP #-}
 module Ignore.Types where
 
+#if MIN_VERSION_base(4,8,0)
+#else
+import Data.Monoid
+#endif
 import Path
 import qualified Data.Text as T
 

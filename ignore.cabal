@@ -1,7 +1,7 @@
 name:                ignore
 version:             0.1.0.0
-synopsis:            Library and tiny tool for working with ignore files of different version control systems
-description:         Please see README.md
+synopsis:            Handle ignore files of different VCSes
+description:         Library and tiny tool for working with ignore files of different version control systems
 homepage:            http://github.com/agrafix/ignore
 license:             BSD3
 license-file:        LICENSE
