@@ -33,7 +33,7 @@ script:
 - $CABAL build
 - $CABAL test --show-details=always
 - $CABAL configure -flib-Werror -fwithout-pcre
-- $CABAL build -fwithout-pcre
+- $CABAL build
 deploy:
   provider: hackage
   username: AlexanderThiemann
