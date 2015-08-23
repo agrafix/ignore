@@ -64,9 +64,7 @@ registerGlob globPattern =
 #ifdef NO_PCRE
 registerRegex :: MonadIO m => T.Text -> CheckerBuilderT m ()
 registerRegex rePattern =
-    CheckerBuilderT $
-    do liftIO $ putStrLn $ "Warning: compile with --without-pcre flag. Ignoring " ++ T.unpack rePattern
-       return ()
+    CheckerBuilderT $ return ()
 #else
 registerRegex :: Monad m => T.Text -> CheckerBuilderT m ()
 registerRegex rePattern =

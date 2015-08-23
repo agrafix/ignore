@@ -1,3 +1,4 @@
+{-# LANGUAGE CPP #-}
 {-# LANGUAGE TemplateHaskell #-}
 {-# LANGUAGE OverloadedStrings #-}
 module Ignore.VCS.Mercurial
@@ -13,7 +14,14 @@ import Path
 import qualified Data.Text as T
 
 makeChecker :: MonadIO m => [T.Text] -> CheckerBuilderT m ()
-makeChecker = go registerRegex
+makeChecker files =
+    do
+#ifdef NO_PCRE
+       liftIO $
+          do putStrLn "The ignore library was compiled with the without-pcre flag."
+             putStrLn "This means it will only support 'syntax: glob' mercurial blocks"
+#endif
+       go registerRegex files
 
 file :: Path Rel File
 file = $(mkRelFile ".hgignore")

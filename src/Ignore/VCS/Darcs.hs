@@ -1,3 +1,4 @@
+{-# LANGUAGE CPP #-}
 {-# LANGUAGE TemplateHaskell #-}
 module Ignore.VCS.Darcs
     ( makeChecker
@@ -11,8 +12,16 @@ import Control.Monad.Trans
 import Path
 import qualified Data.Text as T
 
+#ifdef NO_PCRE
+makeChecker :: MonadIO m => [T.Text] -> CheckerBuilderT m ()
+makeChecker _ =
+    liftIO $
+    do putStrLn "The ignore library was compiled with the without-pcre flag."
+       putStrLn "This means that we can not handle darcs boring files for now."
+#else
 makeChecker :: MonadIO m => [T.Text] -> CheckerBuilderT m ()
 makeChecker = go
+#endif
 
 file :: Path Rel File
 file = $(mkRelDir "_darcs/prefs") </> $(mkRelFile "boring")
