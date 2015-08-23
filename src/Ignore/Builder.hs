@@ -17,10 +17,12 @@ import Control.Monad.Except
 #else
 import Control.Monad.Error
 #endif
+#ifndef NO_PCRE
 import Text.Regex.PCRE.Heavy ((=~))
+import qualified Text.Regex.PCRE.Heavy as Re
+#endif
 import qualified Data.Text as T
 import qualified Data.Text.Encoding as T
-import qualified Text.Regex.PCRE.Heavy as Re
 import qualified System.FilePath.Glob as G
 
 #if MIN_VERSION_mtl(2,2,0)
@@ -59,6 +61,13 @@ registerGlob globPattern =
           do let simplified = G.simplify pat
              lift $ tell $ FileIgnoredChecker (G.matchWith G.matchPosix simplified)
 
+#ifdef NO_PCRE
+registerRegex :: MonadIO m => T.Text -> CheckerBuilderT m ()
+registerRegex rePattern =
+    CheckerBuilderT $
+    do liftIO $ putStrLn $ "Warning: compile with --without-pcre flag. Ignoring " ++ T.unpack rePattern
+       return ()
+#else
 registerRegex :: Monad m => T.Text -> CheckerBuilderT m ()
 registerRegex rePattern =
     CheckerBuilderT $
@@ -66,3 +75,4 @@ registerRegex rePattern =
       Left err -> throwError ("Failed to compile regex pattern " ++ T.unpack rePattern ++ ": " ++ err)
       Right pat ->
           lift $ tell $ FileIgnoredChecker (=~ pat)
+#endif

@@ -7,16 +7,17 @@ where
 
 import Ignore.Builder
 
+import Control.Monad.Trans
 import Path
 import qualified Data.Text as T
 
-makeChecker :: Monad m => [T.Text] -> CheckerBuilderT m ()
+makeChecker :: MonadIO m => [T.Text] -> CheckerBuilderT m ()
 makeChecker = go
 
 file :: Path Rel File
 file = $(mkRelDir "_darcs/prefs") </> $(mkRelFile "boring")
 
-go :: Monad m => [T.Text] -> CheckerBuilderT m ()
+go :: MonadIO m => [T.Text] -> CheckerBuilderT m ()
 go [] = return ()
 go (x : xs)
     | T.null ln = go xs

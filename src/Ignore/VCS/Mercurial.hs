@@ -8,16 +8,17 @@ where
 
 import Ignore.Builder
 
+import Control.Monad.Trans
 import Path
 import qualified Data.Text as T
 
-makeChecker :: Monad m => [T.Text] -> CheckerBuilderT m ()
+makeChecker :: MonadIO m => [T.Text] -> CheckerBuilderT m ()
 makeChecker = go registerRegex
 
 file :: Path Rel File
 file = $(mkRelFile ".hgignore")
 
-go :: Monad m => (T.Text -> CheckerBuilderT m ()) -> [T.Text] -> CheckerBuilderT m ()
+go :: MonadIO m => (T.Text -> CheckerBuilderT m ()) -> [T.Text] -> CheckerBuilderT m ()
 go _ [] = return ()
 go register (x : xs)
     | T.null ln = go register xs

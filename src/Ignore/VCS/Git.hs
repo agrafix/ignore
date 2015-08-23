@@ -8,16 +8,17 @@ where
 
 import Ignore.Builder
 
+import Control.Monad.Trans
 import Path
 import qualified Data.Text as T
 
-makeChecker :: Monad m => [T.Text] -> CheckerBuilderT m ()
+makeChecker :: MonadIO m => [T.Text] -> CheckerBuilderT m ()
 makeChecker = mapM_ handleLine
 
 file :: Path Rel File
 file = $(mkRelFile ".gitignore")
 
-handleLine :: Monad m => T.Text -> CheckerBuilderT m ()
+handleLine :: MonadIO m => T.Text -> CheckerBuilderT m ()
 handleLine origLn
     | T.null ln = return ()
     | T.head ln == '#' = return ()

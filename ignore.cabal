@@ -1,5 +1,5 @@
 name:                ignore
-version:             0.1.0.0
+version:             0.1.1.0
 synopsis:            Handle ignore files of different VCSes
 description:         Library and tiny tool for working with ignore files of different version control systems
 homepage:            http://github.com/agrafix/ignore
@@ -12,6 +12,11 @@ category:            System
 build-type:          Simple
 extra-source-files:  README.md
 cabal-version:       >=1.10
+
+flag without-pcre
+     manual: True
+     default: False
+     description: Disable pcre support. If you enable this flag, version control ignore files that rely on pcre will not work correctly
 
 library
   hs-source-dirs:      src
@@ -27,11 +32,14 @@ library
   build-depends:
                        base >= 4 && < 5,
                        path >= 0.5.1,
-                       pcre-heavy >=0.2,
                        Glob >=0.7,
                        text >=1.2.0.4,
                        mtl >=2.1.3.1,
                        directory >= 1.2.1.0
+  if !flag(without-pcre)
+    build-depends:     pcre-heavy >=0.2
+  else
+    cpp-options:       -DNO_PCRE
   default-language:    Haskell2010
 
 executable ignore

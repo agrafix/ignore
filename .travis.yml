@@ -32,6 +32,7 @@ script:
 - $CABAL check
 - $CABAL build
 - $CABAL test --show-details=always
+- $CABAL build --without-pcre
 deploy:
   provider: hackage
   username: AlexanderThiemann
