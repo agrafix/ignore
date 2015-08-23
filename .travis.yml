@@ -32,7 +32,8 @@ script:
 - $CABAL check
 - $CABAL build
 - $CABAL test --show-details=always
-- $CABAL build --without-pcre
+- $CABAL configure -flib-Werror -fwithout-pcre
+- $CABAL build -fwithout-pcre
 deploy:
   provider: hackage
   username: AlexanderThiemann
