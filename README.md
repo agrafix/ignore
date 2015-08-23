@@ -2,14 +2,29 @@ ignore
 =====
 
 [![Build Status](https://travis-ci.org/agrafix/ignore.svg)](https://travis-ci.org/agrafix/ignore)
+[![Hackage](https://img.shields.io/hackage/v/ignore.svg)](http://hackage.haskell.org/package/ignore)
 
 ## Intro
 
 Hackage: [ignore](http://hackage.haskell.org/package/ignore)
+Stackage: [ignore](https://www.stackage.org/package/ignore)
 
-Library and tiny tool for working with ignore files of different version control systems.
+Handle ignore files of different VCSes
 
-## Library Usage
+## Cli Usage: ignore
+
+```sh
+$ ignore --help
+The ignore tool
+(c) 2015 Alexander Thiemann
+
+Tiny tool to check if a file in a repo is ignored by a VCS
+
+Usage: ignore [--help|-h] file1 file2 file3 ... fileN
+
+```
+
+## Library Usage Example
 
 ```haskell
 module Main where
@@ -28,25 +43,27 @@ main =
        case checker of
            Left err -> error err
            Right (FileIgnoredChecker isFileIgnored) ->
-           	  putStrLn $ 
-           	    "Main.hs is " 
-           	    ++ (if isFileIgnored "Main.hs" 
-           	        then "ignored" else "not ignored")
-```
+                  putStrLn $
+                    "Main.hs is "
+                    ++ (if isFileIgnored "Main.hs"
+                        then "ignored" else "not ignored")
 
-## Commandline Usage
-
-Run in any project under version control to check if a file is ignored or not.
-
-```bash
-$ ignore foo~ dist/bar distinct
-File foo~ IGNORED
-File dist/foo IGNORED
-File distinct not ignored
 ```
 
 ## Install
 
 * Using cabal: `cabal install ignore`
-* From Source: `git clone https://github.com/agrafix/ignore.git && cd ignore && cabal install`
-* Using stack: `git clone https://github.com/agrafix/ignore.git && cd ignore && stack build`
+* Using Stack: `stack install ignore`
+* From Source (cabal): `git clone https://github.com/agrafix/ignore.git && cd ignore && cabal install`
+* From Source (stack): `git clone https://github.com/agrafix/ignore.git && cd ignore && stack build`
+
+
+## Misc
+
+### Supported GHC Versions
+
+
+### License
+
+Released under the BSD3 license.
+(c) 2015 Alexander Thiemann
