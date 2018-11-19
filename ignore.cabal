@@ -30,7 +30,7 @@ library
                        Ignore.VCS.Mercurial
                        Ignore.VCS.Darcs
   build-depends:
-                       base >= 4 && < 5,
+                       base >= 4.8 && < 5,
                        path >= 0.5.1,
                        Glob >=0.7,
                        text >=1.2.0.4,
