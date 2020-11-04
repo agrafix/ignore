@@ -1,10 +1,7 @@
 {-# LANGUAGE CPP #-}
 module Ignore.Types where
 
-#if MIN_VERSION_base(4,8,0)
-#else
-import Data.Monoid
-#endif
+import Data.Semigroup as Sem
 import Path
 import qualified Data.Text as T
 
@@ -27,7 +24,9 @@ data IgnoreFile
 newtype FileIgnoredChecker
     = FileIgnoredChecker { runFileIgnoredChecker :: FilePath -> Bool }
 
+instance Semigroup FileIgnoredChecker where
+    FileIgnoredChecker a <> FileIgnoredChecker b =
+        FileIgnoredChecker $ \fp -> a fp || b fp
+
 instance Monoid FileIgnoredChecker where
     mempty = FileIgnoredChecker $ const False
-    mappend (FileIgnoredChecker a) (FileIgnoredChecker b) =
-        FileIgnoredChecker $ \fp -> a fp || b fp
